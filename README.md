@@ -7,8 +7,10 @@ Estudiante: Gabriel Corobo Cédula: 31561092 Sección: _A_ Grupo N°: ____ GitHu
  
 📌 EVIDENCIA 1 — Capturas de los 2 reportes funcionando (2%)
 Reporte 1 — Clientes por Zona:  
+<img width="1058" height="1033" alt="image" src="https://github.com/user-attachments/assets/4d93fbf8-fb0d-4f81-bbb9-f8f4fd187496" />
 Reporte 2 — Interacciones por Asesor: 
- 
+ <img width="1058" height="1035" alt="image" src="https://github.com/user-attachments/assets/fdcd1616-0309-4b79-8775-9487966ca7af" />
+
  
 📌 EVIDENCIA 2 — Código comentado (2%)
 Copie el método de UNO de los reportes y coméntelo línea por línea:
@@ -72,4 +74,5 @@ Para m el concepto más difícil de entender fue el uso de LEFT JOIN combinado c
 creo que son los que le dan verdadero valor a la base de datos. El reporte de zonas geográficas permite ver visualmente dónde está la mayor concentración de clientes, lo que ayudaría a la empresa a planificar rutas o enfocar publicidad, por otro lado, el reporte de interacciones por asesor es una excelente herramienta para medir el rendimiento del personal, ya que permite evaluar de forma gráfica quién está trabajando más activamente y por qué canal se comunican má
  
 📌 EVIDENCIA 5 — Commit en GitHub (0%)
- 
+ <img width="1058" height="314" alt="image" src="https://github.com/user-attachments/assets/f04e0ebd-af91-409f-8003-bd6042962203" />
+
