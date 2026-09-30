@@ -1,59 +1,75 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+ 
+INFORME TÉCNICO — TALLER SEMANA 9
+ 
+SQL, Query Builder y Reportes del CRM
+Proyecto: CRM "Gestión Integral de Negocios" — ALP-365 Docente: Ing. José Daniel Cadenas L. Fecha: 30/09/2026
+Estudiante: Gabriel Corobo Cédula: 31561092 Sección: _A_ Grupo N°: ____ GitHub: https://github.com/GabrielKent04/crm-gestion-integral.git
+ 
+📌 EVIDENCIA 1 — Capturas de los 2 reportes funcionando (2%)
+Reporte 1 — Clientes por Zona:  
+Reporte 2 — Interacciones por Asesor: 
+ 
+ 
+📌 EVIDENCIA 2 — Código comentado (2%)
+Copie el método de UNO de los reportes y coméntelo línea por línea:
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+// reporte 1: clientes por zona
+public function clientesPorZona()
+{
+    // nos conectamos a la tabla de clientes de la base de datos
+    $zonas = DB::table('clients')
+        // decimos que columnas queremos traer
+        ->select(
+            // traemos el nombre de la zona
+            'zona_geografica',
+            // usamos sql crudo para contar los clientes de esa zona y le ponemos "total"
+            DB::raw('COUNT(*) as total')
+        )
+        // agrupamos por zona para que el count haga su trabajo por cada una
+        ->groupBy('zona_geografica')
+        // ordenamos los resultados de mayor a menor cantidad
+        ->orderByDesc('total')
+        // disparamos la consulta para traer los datos
+        ->get();
 
-## About Laravel
+    // sumamos todos los totales para saber cuantos clientes hay en general
+    $totalGeneral = $zonas->sum('total');
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+    // recorremos las zonas con map para calcular el porcentaje de cada una
+    $zonasConPorcentaje = $zonas->map(function ($zona) use ($totalGeneral) {
+        // comprobamos que el total general no sea 0 para que no explote la division
+        $zona->porcentaje = $totalGeneral > 0
+            // hacemos la formula del porcentaje y redondeamos a 2 decimales
+            ? round(($zona->total / $totalGeneral) * 100, 2)
+            // si el total general era 0, el porcentaje queda en 0
+            : 0;
+        // devolvemos la zona pero ahora con el campo de porcentaje agregado
+        return $zona;
+    });
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+    // agarramos solo los nombres de las zonas y los volvemos un arreglo para usarlos de etiquetas
+    $labels = $zonasConPorcentaje->pluck('zona_geografica')->toArray();
+    // agarramos solo los totales para armar las barras del grafico
+    $data = $zonasConPorcentaje->pluck('total')->toArray();
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+    // mandamos todo esto a la vista blade que esta en la carpeta reports
+    return view('reports.zonas', compact(
+        // aca pasamos las variables que va a usar la vista y el grafico
+        'zonasConPorcentaje', 'totalGeneral', 'labels', 'data'
+    ));
+}
+ 
+📌 EVIDENCIA 3 — Respuestas a 3 preguntas conceptuales (6%)
+Pregunta 1: _______________________________________________ Respuesta:
+Pregunta 2: _______________________________________________ Respuesta:
+Pregunta 3: _______________________________________________ Respuesta:
+ 
+📌 EVIDENCIA 4 — Reflexión breve (150 palabras) (1%)
+1.	¿Qué concepto fue más difícil de entender?
+Para m el concepto más difícil de entender fue el uso de LEFT JOIN combinado con DB::raw en el segundo reporte. Específicamente me costó un poco captar cómo usar el COUNT(CASE WHEN...) para ir contando por separado las llamadas, visitas y WhatsApp dentro de la misma consulta de Query Builder sin que se mezclaran los datos, es un salto grande pasar de un SELECT básico a mezclar el código de Laravel con funciones condicionales de SQL.
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+2.	¿Cómo se aplican estos reportes al CRM?
+creo que son los que le dan verdadero valor a la base de datos. El reporte de zonas geográficas permite ver visualmente dónde está la mayor concentración de clientes, lo que ayudaría a la empresa a planificar rutas o enfocar publicidad, por otro lado, el reporte de interacciones por asesor es una excelente herramienta para medir el rendimiento del personal, ya que permite evaluar de forma gráfica quién está trabajando más activamente y por qué canal se comunican má
+ 
+📌 EVIDENCIA 5 — Commit en GitHub (0%)
+ 
