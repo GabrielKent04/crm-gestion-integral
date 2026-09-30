@@ -62,9 +62,14 @@ public function clientesPorZona()
 }
  
 📌 EVIDENCIA 3 — Respuestas a 3 preguntas conceptuales (6%)
-Pregunta 1: _______________________________________________ Respuesta:
-Pregunta 2: _______________________________________________ Respuesta:
-Pregunta 3: _______________________________________________ Respuesta:
+
+2. ¿Para qué sirve WHERE? Dame un ejemplo aplicado al CRM.
+El WHERE sirve básicamente para filtrar los resultados de una consulta, o sea, para no traer todos los datos de golpe sino solo los que cumplen una condición exacta. Por ejemplo, en nuestro CRM lo usaríamos para buscar solo los clientes que pertenecen a una zona en específico, algo tipo WHERE zona_geografica = 'Cabudare' o para traer los clientes que le tocan a un solo asesor con WHERE user_id = 2. 
+7. En el reporte de interacciones por asesor, ¿por qué usamos LEFT JOIN?
+Lo usamos porque necesitamos que en la tabla final salgan todos los asesores, incluso aquellos que todavía no tienen clientes asignados o no han hecho ninguna interacción. Si llegábamos a usar INNER JOIN, los asesores que tienen 0 llamadas o 0 visitas simplemente no iban a aparecer en la lista del reporte. Con el LEFT JOIN nos aseguramos de traer todo lo de la tabla izquierda (la de usuarios) sí o sí, aunque no haya coincidencias en la otra tabla. 
+10. ¿Qué hace DB::table('clients')?
+Esta línea es como el punto de inicio cuando usamos el Query Builder. Básicamente le dice a Laravel sobre qué tabla específica vamos a trabajar para empezar a armar la consulta. Sería como el equivalente exacto a escribir el FROM clients cuando hacemos código SQL normal. 
+
  
 📌 EVIDENCIA 4 — Reflexión breve (150 palabras) (1%)
 1.	¿Qué concepto fue más difícil de entender?
